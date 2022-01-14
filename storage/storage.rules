@@ -1,0 +1,26 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // User signed in
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Does the logged-in user match the requested userId?
+    function isUser(userId) {
+      return request.auth.uid == userId;
+    }
+
+    // Deny all first
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+
+    // User
+    match /users/{userId}/{allPaths=**} {
+      allow read: if (isSignedIn() && isUser(userId));
+      allow write: if false;
+    }
+  }
+}
