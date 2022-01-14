@@ -45,9 +45,9 @@ jobs:
         with:
           node-version: 16
           cache: npm
-        env:
-          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
       - run: npm ci
       - run: cp firebase.json.dist firebase.json
       - run: (cd functions; npm ci)
       - run: npm run deploy:ci
+        env:
+          FIREBASE_TOKEN: ${{ secrets.firebase_token }}
