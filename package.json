@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "deploy": "firebase deploy --non-interactive -f",
-    "deploy:ci": "firebase deploy --token $FIREBASE_TOKEN --non-interactive -f",
+    "deploy:ci": "firebase deploy --token \"$FIREBASE_TOKEN\" --non-interactive -f",
     "emul": "firebase emulators:start",
     "emul:export": "firebase emulators:start --export-on-exit ./snapshots/",
     "emul:import": "firebase emulators:start --import ./snapshots/ --export-on-exit",
