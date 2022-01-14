@@ -9,8 +9,8 @@
     "emul": "firebase emulators:start",
     "emul:export": "firebase emulators:start --export-on-exit ./snapshots/",
     "emul:import": "firebase emulators:start --import ./snapshots/ --export-on-exit",
-    "emul:exec": "firebase -c ./firebase-local.json emulators:exec '(cd test; npm test)' --export-on-exit ./snapshots/ ; tar cvfz snapshot_$(date '+%Y%m%d_%H%M%S').tgz ./snapshots",
     "test": "firebase emulators:exec '(cd test; npm test)'",
+    "test:export": "firebase emulators:exec '(cd test; npm test)' --export-on-exit ./snapshots/ ; tar cvfz snapshot_$(date '+%Y%m%d_%H%M%S').tgz ./snapshots",
     "test:silent": "firebase emulators:exec '(cd test; npm test)' --json"
   },
   "repository": {

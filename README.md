@@ -159,6 +159,12 @@ It is possible to remove all console output of the emulators by using:
 npm run test:silent
 ```
 
+It is also possible to request the data generated via the test to be exported:
+
+```sh
+npm run test:export
+```
+
 ## Auth
 
 The following authentication methods are available:

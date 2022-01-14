@@ -67,3 +67,8 @@ node_modules/
 
 # Firebase config
 firebase.json
+
+# Snapshots and archives
+snapshots/
+snapshot*.tgz
+snapshot*.tar.gz
