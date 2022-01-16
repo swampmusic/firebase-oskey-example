@@ -285,8 +285,12 @@ If you decide to go the automated way and want to use the script as-is, you will
 need to create an `environment` and set the `FIREBASE_TOKEN` secret. To obtain
 the token, run the command `firebase login:ci`.
 
+Additionnaly, the secrets for the frontend app Firebase config must be set:
+`FIREBASE_API_KEY`, `FIREBASE_APP_ID` and `FIREBASE_MESSAGING_SENDER_ID`;
+
 **Important:** You will need to setup your own Firebase app for deploying, and
-adjust `.firebaserc` and `firebase.json` accordingly.
+adjust `.firebaserc`, `firebase.json` and
+`public/src/environments/environment.prod.ts` accordingly.
 
 ## Contributions
 
