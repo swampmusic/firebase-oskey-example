@@ -5,6 +5,10 @@
   "main": "index.js",
   "scripts": {
     "deploy": "firebase deploy --non-interactive -f",
+    "deploy:firestore": "firebase deploy --only firestore",
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:storage": "firebase deploy --only storage",
     "deploy:ci": "firebase deploy --token \"$FIREBASE_TOKEN\" --non-interactive -f",
     "emul": "firebase emulators:start",
     "emul:export": "firebase emulators:start --export-on-exit ./snapshots/",

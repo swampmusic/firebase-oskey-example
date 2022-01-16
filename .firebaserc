@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "oskey-example"
+  },
+  "targets": {
+    "oskey-example": {
+      "hosting": {
+        "oskey-example": [
+          "oskey-example"
+        ]
+      }
+    }
   }
 }

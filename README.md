@@ -1,5 +1,7 @@
 [![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 [![node](https://img.shields.io/badge/node-16.x-233056)](https://nodejs.org)
+[![typescript](https://img.shields.io/badge/typescript-only-4278c2)](https://www.typescriptlang.org)
+[![angular](https://img.shields.io/badge/angular-13.x-cb2b39)](https://angular.io)
 
 # firebase-oskey-example
 
@@ -9,7 +11,7 @@
 
 This is an example project to run a cloud app on Firebase (project
 oskey-example). This repository provides the backend side (Auth,
-Cloud Firestore, Cloud Functions and Cloud Storage).
+Cloud Firestore, Cloud Functions and Cloud Storage) and a fontend web app.
 
 Emulators and unit tests are available, along with CI/CD to deploy releases
 online.
@@ -20,9 +22,16 @@ It is provided under the MIT License.
 
 ### Requirements
 
-- `node` v16.x
+- [node](https://nodejs.org): v16.x (latest LTS version supported by Firebase)
+- [firebase-tools](https://www.npmjs.com/package/firebase-tools): v10
+- [@angular/cli](https://www.npmjs.com/package/@angular/cli): v13
 
-Note: `firebase-tools` are not required to be installed globally.
+Note: `firebase-tools` and `@angular/cli` are not required to be installed
+globally, using `npx` command will call the one installed with the program
+dependencies.
+
+- `npx firebase ...` from the root of the repository for `firebase-tools`
+- `npx ng ...` in the `public` folder for `@angular/cli`
 
 ### Clone and download dependencies
 
@@ -39,8 +48,19 @@ npm ci
 
 ### Build Cloud Functions
 
-Only the Cloud Functions required to be build prior to running emulator. To do
-so go into the `functions` folder and:
+The Cloud Functions must be build prior to running emulator. To do so go into
+the `functions` folder and:
+
+```sh
+npm ci
+npm run lint
+npm run build
+```
+
+### Build the hosted frontend app
+
+The frontend app must be build prior to running emulator. To do so go into
+the `public` folder and:
 
 ```sh
 npm ci
@@ -65,8 +85,31 @@ Here's an example:
     "indexes": "firestore/firestore.indexes.json"
   },
   "functions": {
-    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint", "npm --prefix \"$RESOURCE_DIR\" run build"],
+    "predeploy": ["npm --prefix ./functions run lint", "npm --prefix ./functions run build"],
     "source": "./functions"
+  },
+  "hosting": {
+    "target": "oskey-example",
+    "public": "public/dist/public",
+    "ignore": ["**/.*"],
+    "headers": [
+      {
+        "source": "*.[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].+(css|js)",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public,max-age=31536000,immutable"
+          }
+        ]
+      }
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ],
+    "predeploy": ["npm --prefix ./public run lint", "npm --prefix ./public run build"]
   },
   "storage": {
     "rules": "storage/storage.rules"
@@ -83,6 +126,10 @@ Here's an example:
     "firestore": {
       "hostname": "localhost",
       "port": 18002
+    },
+    "hosting": {
+      "hostname": "localhost",
+      "port": 18004
     },
     "storage": {
       "hostname": "localhost",
@@ -114,7 +161,7 @@ There are additional scripts available:
   same data other tests)
 - `npm run emul:import`: import the data exported from a previous run
 
-### Unit testing
+### Unit testing (Cloud Functions and Firestore/Storage rules)
 
 Prior to running the unit tests, the config file `config.json` must be set in the `test` folder (a `config.json.dist` file is available for reference).
 
@@ -184,7 +231,15 @@ Function code can be found on in the folder `functions`. They are coded in
 
 Rules can be found in the folder `storage`.
 
-## Emulators and unit tests
+## Hosting
+
+An example of hosted app in available in the folder `public`. It uses
+[Angular](https://angular.io) with
+[@angular/material](https://www.npmjs.com/package/@angular/material) for
+the UI and [@angular/fire](https://www.npmjs.com/package/@angular/fire) for
+as Firebase SDK.
+
+## Emulators and unit tests (backend)
 
 Unit test code for the backend (Auth, Cloud Firestore, Cloud Functions and Cloud
 Storage) can be found in the folder `test`. They are coded in `Typescript` and
@@ -203,6 +258,7 @@ The emulators will use the following port (if you use the provided configuration
 | Auth            | 18001 |
 | Cloud Firestore | 18002 |
 | Cloud Functions | 18003 |
+| Cloud Hosting   | 18004 |
 | Cloud Storage   | 18005 |
 
 These additional ports will be run for the emulator engine itself.
@@ -211,6 +267,26 @@ These additional ports will be run for the emulator engine itself.
 | ----------------- | ----- |
 | Emulator UI       | 18000 |
 | Emulator Hub      | 18099 |
+
+## Deployment to Firebase
+
+This project contains both script for deployment via Github Actions triggered
+when a new release is created on [Github](https://github.com) or a
+`npm run deploy` command to trigger the deployment manually.
+
+If you decide to go the manual way, you can deploy individually using:
+
+- `npm run deploy:firestre` to deploy the Cloud Firestore rules and indexes only
+- `npm run deploy:functions` to deploy the Cloud Functions only
+- `npm run deploy:hosting` to deploy the fronted end app only
+- `npm run deploy:storage` to deploy the Cloud Storage rules only
+
+If you decide to go the automated way and want to use the script as-is, you will
+need to create an `environment` and set the `FIREBASE_TOKEN` secret. To obtain
+the token, run the command `firebase login:ci`.
+
+**Important:** You will need to setup your own Firebase app for deploying, and
+adjust `.firebaserc` and `firebase.json` accordingly.
 
 ## Contributions
 
