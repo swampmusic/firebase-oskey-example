@@ -52,7 +52,7 @@ export class OSKAuthSignUpFormComponent implements OnDestroy {
         const email = this.form.get('email')?.value ?? '';
         const password = this.form.get('password')?.value ?? '';
         await this.authService.createUserWithEmailAndPassword(email, password);
-        this.router.navigate([this.returnUrl]);
+        this.router.navigate(['app/welcome']);
       } catch (err) {
         this.signUpHasFailed = true;
       }
