@@ -65,9 +65,6 @@ node_modules/
 # dotenv environment variables file
 .env
 
-# Firebase config
-firebase.json
-
 # Snapshots and archives
 snapshots/
 snapshot*.tgz

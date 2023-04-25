@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#
+# firebase-oskey-example
+# Copyright (c) 2021-2023, OSkey SAS. MIT License.
+#
+
+# run the original firebase
+if [ $FIREBASE_TOKEN ]; then
+  npx firebase "$@" --token $FIREBASE_TOKEN
+else
+  npx firebase "$@"
+fi

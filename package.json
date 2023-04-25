@@ -27,7 +27,7 @@
     "url": "https://github.com/oskey-example/firebase-oskey-example/issues"
   },
   "homepage": "https://github.com/oskey-example/firebase-oskey-example#readme",
-  "dependencies": {
-    "firebase-tools": "^10.1.0"
+  "devDependencies": {
+    "firebase-tools": "^10.9.1"
   }
 }
