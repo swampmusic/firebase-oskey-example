@@ -12,7 +12,7 @@
 #
 
 # Continuous delivery - Build, test and publish npm package on release creation
-name: CD
+name: release
 
 on:
   release:

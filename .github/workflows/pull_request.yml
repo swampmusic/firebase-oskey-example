@@ -1,0 +1,64 @@
+#
+# firebase-oskey-example
+# Copyright (c) 2021-2023, OSkey SAS. MIT License.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+#
+
+name: pull_request
+
+on:
+  push:
+    branches: ['master']
+  pull_request:
+    branches: ['master']
+
+jobs:
+  build:
+    name: Build firebase-oskey-dev
+    runs-on: ubuntu-22.04
+    env:
+      FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
+    steps:
+      - name: Cache Firebase emulators
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.FIREBASE_EMULATORS_PATH }}
+          key: ${{ runner.os }}-firebase-emulators-${{
+            hashFiles('emulator-cache/**') }}
+        continue-on-error: true
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+      - name: 'Firebase: Install dependencies'
+        run: npm ci
+      - name: 'Functions: Install dependencies, lint and build'
+        run: (cd functions; npm ci && npm run lint && npm run build)
+      - name: 'Test: Install dependencies and lint'
+        run: (cd functions; npm ci && npm run lint)
+      - name: Install Java and ImageMagick
+        run: |
+          apt-get update && \
+          apt-get install -y -o DPkg::Options::=--force-confdef openjdk-19-jre-headless imagemagick
+      - name: Set google credentials
+        run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > ./credentials.json
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}
+      - name: Set to local project
+        run: |
+          export GOOGLE_APPLICATION_CREDENTIALS='`pwd`/credentials.json' && \
+          PATH=$PATH:./.devcontainer firebase-cli use dev && \
+          unset GOOGLE_APPLICATION_CREDENTIALS
+      - name: Run test
+        run: PATH=$PATH:./.devcontainer npm test
+# End
