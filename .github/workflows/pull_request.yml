@@ -51,7 +51,7 @@ jobs:
           sudo apt-get update && \
           sudo apt-get install -y -o DPkg::Options::=--force-confdef openjdk-19-jre-headless imagemagick
       - name: Set google credentials
-        run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > ./credentials.json
+        run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > ./credentials.json && cat ./credentials.json
         env:
           GOOGLE_APPLICATION_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}
       - name: Set to dev project
