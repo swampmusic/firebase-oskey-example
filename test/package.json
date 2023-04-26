@@ -12,6 +12,7 @@
     "test": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit",
     "test:bail": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit --bail",
     "test:progress": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit --reporter progress",
+    "test:ci": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit",
     "test:ci:json": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit --reporter json --reporter-option output=test_result.json"
   },
   "devDependencies": {

@@ -19,6 +19,7 @@
     "test:export": "firebase-cli emulators:exec '(cd test; npm run test:export)' --json --only auth,firestore,functions,pubsub,storage",
     "test:export:bail": "firebase-cli emulators:exec '(cd test; npm run test:export:bail)' --json --only auth,firestore,functions,pubsub,storage",
     "test:progress": "firebase-cli emulators:exec '(cd test; npm run test:progress)' --json --only auth,firestore,functions,pubsub,storage",
+    "test:ci": "firebase-cli emulators:exec '(cd test; npm run test:ci)' --only auth,firestore,functions,pubsub,storage",
     "test:ci:json": "firebase-cli emulators:exec '(cd test; npm run test:ci:json)' --json --only auth,firestore,functions,pubsub,storage"
   },
   "repository": {

@@ -14,7 +14,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.OSKUserStatusController = void 0;
 const firestore_1 = require("firebase-admin/firestore");
-const core_1 = require("@oskey/core");
+const core_1 = require("../../core");
 class OSKUserStatusController extends core_1.OSKDocumentController {
     constructor() {
         super();

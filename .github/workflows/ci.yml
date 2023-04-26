@@ -37,5 +37,3 @@ jobs:
         env:
           FIREBASE_TOKEN: ${{ secrets.firebase_token }}
       - run: PATH=$PATH:./.devcontainer npm run test:ci:json
-        env:
-          FIREBASE_TOKEN: ${{ secrets.firebase_token }}

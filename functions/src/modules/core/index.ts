@@ -22,8 +22,6 @@ export { OSKDocument } from './models/documents/document.model';
 export { OSKDocumentList } from './models/documents/document_list.model';
 export { OSKDocumentId } from './models/documents/document_id.model';
 export { OSKCoordinate } from './models/shared/coordinate.model';
-export { OSKDoorInfo } from './models/shared/door_info.model';
-export { OSKPhoneNumber } from './models/shared/phone_number.model';
 export { OSKStreetAddress } from './models/shared/street_address.model';
 
 /**
