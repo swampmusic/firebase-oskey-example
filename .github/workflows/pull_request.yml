@@ -35,7 +35,7 @@ jobs:
         continue-on-error: true
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Node 18.x
+      - name: Node 18.15.0
         uses: actions/setup-node@v3
         with:
           node-version: '18.15.0'
@@ -51,12 +51,12 @@ jobs:
           sudo apt-get update && \
           sudo apt-get install -y -o DPkg::Options::=--force-confdef openjdk-19-jre-headless imagemagick
       - name: Set google credentials
-        run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > ./credentials.json && cat ./credentials.json
+        run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > ./credentials.json
         env:
           GOOGLE_APPLICATION_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}
       - name: Set to dev project
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS='`pwd`/credentials.json' && cat $GOOGLE_APPLICATION_CREDENTIALS \
+          export GOOGLE_APPLICATION_CREDENTIALS=`pwd`'/credentials.json' \
           PATH=$PATH:./.devcontainer firebase-cli use dev && \
           unset GOOGLE_APPLICATION_CREDENTIALS
       - name: Run test
