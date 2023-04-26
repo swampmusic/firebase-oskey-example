@@ -30,8 +30,8 @@ async function init(): Promise<OSKTUnitTestApps> {
 
 async function prepareUnitTests(apps: OSKTUnitTestApps) {
     before('Cleanup', async () => {
-        console.info('Environment');
-        console.info(process.env);
+        // console.info('Environment');
+        // console.info(process.env);
         console.info('Deactivate background triggers...');
         await apps.firebaseAdminTestApp.disableBackgroundTriggers();
         await sleep(2000);

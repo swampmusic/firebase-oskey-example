@@ -49,7 +49,7 @@ jobs:
           cache: npm
       - run: npm ci
       - run: (cd functions; npm ci && npm run lint)
-      - run: PATH=$PATH:./.devcontainer firebase-cli use local
+      - run: PATH=$PATH:./.devcontainer firebase-cli use prod
       - run: PATH=$PATH:./.devcontainer npm run deploy:ci:part1
       - run: PATH=$PATH:./.devcontainer npm run deploy:ci:part2
         env:
