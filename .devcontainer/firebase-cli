@@ -15,7 +15,7 @@
 
 # run the original firebase
 if [ $FIREBASE_TOKEN ]; then
-  npx firebase "$@" --token $FIREBASE_TOKEN
+  npx firebase "$@" --token "$FIREBASE_TOKEN"
 else
   npx firebase "$@"
 fi
