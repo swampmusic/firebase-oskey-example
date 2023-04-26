@@ -1,6 +1,24 @@
+//
+// firebase-oskey-example
+// Copyright (c) 2021-2023, OSkey SAS. MIT License.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+ 
 rules_version = '2';
 service firebase.storage {
   match /b/{bucket}/o {
+
+    // Deny all first
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
 
     // User signed in
     function isSignedIn() {
@@ -11,16 +29,37 @@ service firebase.storage {
     function isUser(userId) {
       return request.auth.uid == userId;
     }
-
-    // Deny all first
-    match /{allPaths=**} {
-      allow read, write: if false;
+    
+    // Public folders
+    match /public/{allPaths=**} {
+    	allow read: if true;
+      allow write: if false;
     }
 
-    // User
-    match /users/{userId}/{allPaths=**} {
-      allow read: if (isSignedIn() && isUser(userId));
-      allow write: if false;
+
+    // User folder
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn() && isUser(userId);
+      allow update, delete: if false;
+
+      // All subpath are for the user only
+      match /{allPaths=**} {
+        allow read: if isSignedIn(); 
+        allow write: if false;
+      }
+
+      // Allow images: JPG/PNG 1MB max
+      match /public/profileImages/{imageId} {
+        allow read: if isSignedIn();
+        allow create: if isSignedIn() && isUser(userId) && request.resource.size < 1024 * 1024 && (imageId.matches("^[a-fA-F0-9\\-]*\\.jpg$") || imageId.matches("^[a-fA-F0-9\\-]*\\.jpeg$") || imageId.matches("^[a-fA-F0-9\\-]*\\.png$"));
+        allow update, delete: if false;
+
+        match /thumbnails/{allPaths=**} {
+          allow read: if isSignedIn();
+          allow write: if false;
+        }
+      }
     }
   }
 }

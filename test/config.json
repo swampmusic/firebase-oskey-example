@@ -1,0 +1,7 @@
+{
+  "projectId": "oskey-example",
+  "region": "europe-west1",
+  "storageBucket": "oskey-example.appspot.com",
+  "hubHostname": "127.0.0.1",
+  "hubPort": 19006
+}

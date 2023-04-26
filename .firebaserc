@@ -1,12 +1,13 @@
 {
   "projects": {
-    "default": "oskey-example"
+    "dev": "oskey-example",
+    "prod": "oskey-example"
   },
   "targets": {
     "oskey-example": {
       "hosting": {
         "oskey-example": [
-          "oskey-example"
+          "dynlink-oskey-example"
         ]
       }
     }

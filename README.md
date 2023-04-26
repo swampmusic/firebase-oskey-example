@@ -1,11 +1,12 @@
 [![License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
-[![node](https://img.shields.io/badge/node-16.x-233056)](https://nodejs.org)
+[![node](https://img.shields.io/badge/node-18.x-233056)](https://nodejs.org)
 [![typescript](https://img.shields.io/badge/typescript-only-4278c2)](https://www.typescriptlang.org)
-[![angular](https://img.shields.io/badge/angular-13.x-cb2b39)](https://angular.io)
 
 # firebase-oskey-example
 
-(c) Copyright OSkey SAS. MIT License.
+```
+Copyright (c) 2021-2023, OSkey SAS. MIT License.
+```
 
 ## About
 
@@ -22,16 +23,33 @@ It is provided under the MIT License.
 
 ### Requirements
 
-- [node](https://nodejs.org): v16.x (latest LTS version supported by Firebase)
-- [firebase-tools](https://www.npmjs.com/package/firebase-tools): v10
-- [@angular/cli](https://www.npmjs.com/package/@angular/cli): v13
+#### Using VS Code and dev container (recommended)
 
-Note: `firebase-tools` and `@angular/cli` are not required to be installed
-globally, using `npx` command will call the one installed with the program
-dependencies.
+- Linux or Mac
+- git: Any git client should work
+- [VS Code](https://code.visualstudio.com) (latest version)
+- Docker (latest version)
 
-- `npx firebase ...` from the root of the repository for `firebase-tools`
-- `npx ng ...` in the `public` folder for `@angular/cli`
+Using the VS Code dev container will ensure all requirements are met. In
+addition, all is contained, so you don't have to mess with you local Node
+installation (node, npm, ...).
+
+_Note:_ For Windows users, you have to make adjustment to the dev container.
+
+#### Building and testing locally (not recommended)
+
+- git: Any git client should work
+- [node](https://nodejs.org): v18.x (latest LTS version supported by Firebase)
+- [firebase-tools](https://www.npmjs.com/package/firebase-tools): v11
+- [Java OpenJDK Runtime Environment](https://): v19
+
+_Note:_ `firebase-tools` are not required to be installed globally, using `npx`
+command will call the one installed with the program dependencies. The dev
+container provides a `firebase-cli` that is a shortcuts to `npx firebase` and
+that can detect if a token is set in the `env`. If you cannot copy the file
+(located in `.devcontainer/`), you will have to update the scripts on the
+`package.json` file at the root of the project to call `npx firebase` instead of
+`firebase-cli`.
 
 ### Clone and download dependencies
 
@@ -46,6 +64,135 @@ cd firebase-oskey-example
 npm ci
 ```
 
+### Create a Firebase project and update configuration
+
+Prior to running the emulator, it is required to login. However you probably
+won't have access to the Firebase project set by default, therefor you need to
+create a project on Firebase (a Google email account is required for that). On
+you Firebase project you need to activate:
+
+- Authentication (email/password)
+- Firestore
+- Cloud Function (it will ask you to have a `Blaze` plan, but it should not cost
+  you anything unless you deploy and start having many request. For your own
+  testing you should not exceed the free tier, but be careful)
+- Storage
+- Hosting
+- Dynamic link
+
+Once it is done, you need to add in `.firebaserc` a configuration for your
+project. For example (replace `PROJECT_NAME` by you project name):
+
+```json
+{
+  "projects": {
+    "dev": "oskey-example",
+    "prod": "oskey-example",
+    "my-project": "PROJECT_NAME"
+  },
+  "targets": {
+    "oskey-example": {
+      "hosting": {
+        "oskey-example": ["dynlink-oskey-example"]
+      }
+    },
+    "PROJECT_NAME": {
+      "hosting": {
+        "PROJECT_NAME": ["dynlink-PROJECT_NAME"]
+      }
+    }
+  }
+}
+```
+
+Finaly you need to update `firebase.json`. For example (replace `PROJECT_NAME`
+by you project name):
+
+```json
+{
+  "firestore": {
+    "rules": "firestore/firestore.rules",
+    "indexes": "firestore/firestore.indexes.json"
+  },
+  "functions": {
+    "predeploy": ["npm --prefix \"$RESOURCE_DIR\" run lint", "npm --prefix \"$RESOURCE_DIR\" run build"],
+    "source": "./functions"
+  },
+  "hosting": [
+    {
+      "target": "oskey-example",
+      "appAssociation": "AUTO",
+      "rewrites": [
+        {
+          "source": "/app/**",
+          "dynamicLinks": true
+        },
+        {
+          "source": "/auth/**",
+          "dynamicLinks": true
+        }
+      ]
+    },
+    {
+      "target": "PROJECT_NAME",
+      "appAssociation": "AUTO",
+      "rewrites": [
+        {
+          "source": "/app/**",
+          "dynamicLinks": true
+        },
+        {
+          "source": "/auth/**",
+          "dynamicLinks": true
+        }
+      ]
+    }
+  ],
+  "storage": {
+    "rules": "storage/storage.rules"
+  },
+  "emulators": {
+    "ui": {
+      "enabled": true,
+      "host": "0.0.0.0",
+      "port": 19000
+    },
+    "auth": {
+      "host": "0.0.0.0",
+      "port": 19001
+    },
+    "firestore": {
+      "host": "0.0.0.0",
+      "port": 19002,
+      "websocketPort": 19097
+    },
+    "functions": {
+      "host": "0.0.0.0",
+      "port": 19003
+    },
+    "storage": {
+      "host": "0.0.0.0",
+      "port": 19005
+    },
+    "hub": {
+      "host": "0.0.0.0",
+      "port": 19006
+    },
+    "eventarc": {
+      "host": "0.0.0.0",
+      "port": 18098
+    },
+    "logging": {
+      "host": "0.0.0.0",
+      "port": 18099
+    }
+  }
+}
+```
+
+_Note:_ You may also just replace in both file all iterations for
+`oskey-example` by you project name.
+
 ### Build Cloud Functions
 
 The Cloud Functions must be build prior to running emulator. To do so go into
@@ -57,96 +204,24 @@ npm run lint
 npm run build
 ```
 
-### Build the hosted frontend app
-
-The frontend app must be build prior to running emulator. To do so go into
-the `public` folder and:
+During development, it may be more interesting to rebuild code automatically,
+as the Cloud Function emulator is able to reload. To do so:
 
 ```sh
-npm ci
-npm run lint
-npm run build
+npm run build:watch
 ```
+
+_Note:_ In some cases, the emulator is not able to properly reload, though no
+errors are reported. In this case stop the emulators, restart the build/watch
+command and restart the emulator. If the problem persist, it could be because
+some import do not properly refer to the module (`@oskey/*`) or should have a
+path like `/src/...` instead of `../../../`.
 
 ### Run the emulator
 
-Prior to running the emulators, the config file `firebase.json` must be created (a `firebase.json.dist` file is available for reference).).
-
-Then each emulator configuration can be adjusted to listen on a given port and
-hostname (i.e.: the API has to call this hostname). Unless trying to test the a
-mobile app, the hostname could be left to default (`localhost`).
-
-Here's an example:
-
-```json
-{
-  "firestore": {
-    "rules": "firestore/firestore.rules",
-    "indexes": "firestore/firestore.indexes.json"
-  },
-  "functions": {
-    "predeploy": ["npm --prefix ./functions run lint", "npm --prefix ./functions run build"],
-    "source": "./functions"
-  },
-  "hosting": {
-    "target": "oskey-example",
-    "public": "public/dist/public",
-    "ignore": ["**/.*"],
-    "headers": [
-      {
-        "source": "*.[0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f][0-9a-f].+(css|js)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "public,max-age=31536000,immutable"
-          }
-        ]
-      }
-    ],
-    "rewrites": [
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
-    "predeploy": ["npm --prefix ./public run lint", "npm --prefix ./public run build"]
-  },
-  "storage": {
-    "rules": "storage/storage.rules"
-  },
-  "emulators": {
-    "auth": {
-      "hostname": "localhost",
-      "port": 18001
-    },
-    "functions": {
-      "hostname": "localhost",
-      "port": 18003
-    },
-    "firestore": {
-      "hostname": "localhost",
-      "port": 18002
-    },
-    "hosting": {
-      "hostname": "localhost",
-      "port": 18004
-    },
-    "storage": {
-      "hostname": "localhost",
-      "port": 18005
-    },
-    "ui": {
-      "enabled": true,
-      "hostname": "localhost",
-      "port": 18000
-    },
-    "hub": {
-      "hostname": "localhost",
-      "port": 18099
-    }
-  }
-}
-```
+Each emulator configuration can be found in the config file `firebase.json`.
+Scripts in the `package.json` file at the root of the project can be tweaked to
+match your requirements.
 
 The emulator can be started using the following command, from the root folder of
 the project:
@@ -161,9 +236,16 @@ There are additional scripts available:
   same data other tests)
 - `npm run emul:import`: import the data exported from a previous run
 
-### Unit testing (Cloud Functions and Firestore/Storage rules)
+### Build and watch the code changes
 
-Prior to running the unit tests, the config file `config.json` must be set in the `test` folder (a `config.json.dist` file is available for reference).
+...
+
+### Unit testing (Cloud Functions, Firestore rules and indexes, Storage rules)
+
+#### Configure testing
+
+Prior to running the unit tests, the config file `config.json` must be set in
+the `test` folder (a `config.json.dist` file is available for reference).
 
 Here's an example:
 
@@ -172,18 +254,26 @@ Here's an example:
   "projectId": "oskey-example",
   "region": "europe-west",
   "hubHostname": "localhost",
-  "hubPort": 18099
+  "hubPort": 19006
 }
 ```
 
-The hub is used to get the detail about the emulators, so it self configures.
-
-Then, the dependencies must be downlaoded. To do so run `npm ci` in the `test` folder.
+This may be required is you made changes to the Firebase config (`.firebaserc`
+and/or `firebase.json`).
 
 The unit tests can be run in two ways:
 
 - While the emulators run
 - Along with emulators (no emulators should already be running)
+
+#### While the emulators run: during development
+
+In this scenario, the emulators are usually running while code is been changed,
+then when the code is, the test may be run.
+
+The hub is used to get the detail about the emulators, so it self configures.
+
+Then, the dependencies must be downlaoded. To do so run `npm ci` in the `test` folder.
 
 To run unit tests while the emulators is started, go to the `test` folder then:
 
@@ -191,26 +281,39 @@ To run unit tests while the emulators is started, go to the `test` folder then:
 npm test
 ```
 
-**Important**: The units deletes all existing data and user prior to running the tests.
+**Important**: The units deletes all existing data and user prior to running the
+tests.
 
-To run unit tests along with the emulatores, run the following command from the
-root folder of the project:
+There are additional scripts:
+
+| Command                  | Description                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| npm run test:bail        |  Same as npm test, but the test stops at the first failure                                 |
+| npm run test:export      |  Same as npm test, the data are then exported for future import with `npm run emul:import` |
+| npm run test:export:bail |  Same as npm run test:export, but the test stops at the first failure                      |
+| npm run test:progress    |  Same as npm test, but the output only shows the test progress, not all the log            |
+
+#### Along with the emulators: CI/CD workflow, git hooks and other scenarios
+
+To run unit tests along with the emulators (it will start the emulator, run the test then shutdown the emulator), run
+the following command from the **root folder** of the project:
 
 ```sh
 npm test
 ```
 
-It is possible to remove all console output of the emulators by using:
+There are additional scripts:
 
-```sh
-npm run test:silent
-```
+| Command                  | Description                                                                                |
+| ------------------------ | ------------------------------------------------------------------------------------------ |
+| npm run test:bail        |  Same as npm test, but the test stops at the first failure                                 |
+| npm run test:export      |  Same as npm test, the data are then exported for future import with `npm run emul:import` |
+| npm run test:export:bail |  Same as npm run test:export, but the test stops at the first failure                      |
+| npm run test:progress    |  Same as npm test, but the output only shows the test progress, not all the log            |
+| npm run test:ci:json     |  Same as npm test, used in CI/CD workflows                                                 |
 
-It is also possible to request the data generated via the test to be exported:
-
-```sh
-npm run test:export
-```
+These commands are usefull if it is required to perform a full test in pre-commit or
+pre-push git hooks.
 
 ## Auth
 
@@ -255,18 +358,18 @@ The emulators will use the following port (if you use the provided configuration
 
 | Emulator        | Port  |
 | --------------- | ----- |
-| Auth            | 18001 |
-| Cloud Firestore | 18002 |
-| Cloud Functions | 18003 |
-| Cloud Hosting   | 18004 |
-| Cloud Storage   | 18005 |
+| Auth            | 19001 |
+| Cloud Firestore | 19002 |
+| Cloud Functions | 19003 |
+| Pub/Sub         | 19004 |
+| Cloud Storage   | 19005 |
 
 These additional ports will be run for the emulator engine itself.
 
 | Additional server | Port  |
 | ----------------- | ----- |
-| Emulator UI       | 18000 |
-| Emulator Hub      | 18099 |
+| Emulator UI       | 19000 |
+| Emulator Hub      | 19006 |
 
 ## Deployment to Firebase
 
@@ -274,32 +377,15 @@ This project contains both script for deployment via Github Actions triggered
 when a new release is created on [Github](https://github.com) or a
 `npm run deploy` command to trigger the deployment manually.
 
-If you decide to go the manual way, you can deploy individually using:
-
-- `npm run deploy:firestre` to deploy the Cloud Firestore rules and indexes only
-- `npm run deploy:functions` to deploy the Cloud Functions only
-- `npm run deploy:hosting` to deploy the fronted end app only
-- `npm run deploy:storage` to deploy the Cloud Storage rules only
-
-If you decide to go the automated way and want to use the script as-is, you will
-need to create an `environment` and set the `FIREBASE_TOKEN` secret. To obtain
-the token, run the command `firebase login:ci`.
-
-Additionnaly, the secrets for the frontend app Firebase config must be set:
-`FIREBASE_API_KEY`, `FIREBASE_APP_ID` and `FIREBASE_MESSAGING_SENDER_ID`;
-
-**Important:** You will need to setup your own Firebase app for deploying, and
-adjust `.firebaserc`, `firebase.json` and
-`public/src/environments/environment.prod.ts` accordingly.
-
 ## Contributions
 
 Please find [here](./CONTRIBUTING.md) the instructions for contributions.
 
 ## Licenses
 
-Please find [here](./LICENSE) the detail on licensing.
+Please find [here](./LICENSE.md) the detail on licensing.
 
+```
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -307,3 +393,4 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+```

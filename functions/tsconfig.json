@@ -1,17 +1,27 @@
 {
-  "compilerOptions": {
-    "module": "commonjs",
-    "noImplicitReturns": true,
-    "noUnusedLocals": true,
-    "outDir": "dist",
-    "sourceMap": true,
-    "strict": true,
-    "target": "es2017",
-    "allowJs": true,
-    "checkJs": false
-  },
-  "compileOnSave": true,
-  "include": ["src"],
-  "exclude": ["node_modules"],
-  "typeRoots": ["../node_modules/@types"]
+    "compilerOptions": {
+        "module": "commonjs",
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "outDir": "dist",
+        "sourceMap": true,
+        "strict": true,
+        "target": "es2017",
+        "allowJs": false,
+        "checkJs": false,
+        "moduleResolution": "node",
+        "esModuleInterop": true,
+        "resolveJsonModule": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": "./",
+        "paths": {
+            "@oskey/core": ["src/modules/core"],
+            "@oskey/user": ["src/modules/user"]
+        }
+    },
+    "compileOnSave": true,
+    "include": ["src", "src/modules/access_control_device/.old/device_api_server_config.model.ts"],
+    "exclude": ["node_modules"],
+    "typeRoots": ["../node_modules/@types"]
 }

@@ -1,0 +1,7 @@
+{
+  "mochaExplorer.files": "src/unit_test.ts",
+  "mochaExplorer.require": "ts-node/register",
+  "mochaExplorer.delay": true,
+  "mochaExplorer.timeout": 60000,
+  "mochaExplorer.logpanel": true
+}

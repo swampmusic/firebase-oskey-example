@@ -1,41 +1,61 @@
 "use strict";
-/**
- * firebase-oskey-example
- * @copyright (c) 2020, OSkey.io. MIT License.
- * @license SEE LICENSE IN LICENSE.md
- */
+//
+// firebase-oskey-example
+// Copyright (c) 2021-2023, OSkey SAS. MIT License.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
+    }
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.onUserUpdated = exports.onUserCreated = exports.onUserAccountDeleted = exports.onUserAccountCreated = void 0;
-const admin = require("firebase-admin");
-const functions = require("firebase-functions");
-const firebase_auth_1 = require("./firebase_auth");
-const firebase_firestore_1 = require("./firebase_firestore");
-/** *****************************************************************************
+exports.user = exports.core = void 0;
+const app_1 = require("firebase-admin/app");
+const functions = __importStar(require("firebase-functions"));
+const coreTriggers = __importStar(require("./modules/core"));
+const userTriggers = __importStar(require("./modules/user"));
+/**
  * Initialize app
- ***************************************************************************** */
-admin.initializeApp();
-/** *****************************************************************************
- * Authentication trigger
- ***************************************************************************** */
-// On user creation
-exports.onUserAccountCreated = functions
-    .region('europe-west1')
-    .auth.user()
-    .onCreate((user) => firebase_auth_1.OSKFirebaseAuthModule.userAccountController.onUserAccountCreated(user));
-// On user deletion
-exports.onUserAccountDeleted = functions
-    .region('europe-west1')
-    .auth.user()
-    .onDelete((user) => firebase_auth_1.OSKFirebaseAuthModule.userAccountController.onUserAccountDeleted(user));
-/** *****************************************************************************
- * DB Trigger : User
- ***************************************************************************** */
-exports.onUserCreated = functions
-    .region('europe-west1')
-    .firestore.document('/users/{userId}')
-    .onCreate((snapshot, context) => firebase_firestore_1.OSKFirebaseFirestoreModule.userController.onCreate(snapshot, context));
-exports.onUserUpdated = functions
-    .region('europe-west1')
-    .firestore.document('/users/{userId}')
-    .onUpdate((snapshot, context) => firebase_firestore_1.OSKFirebaseFirestoreModule.userController.onUpdate(snapshot, context));
+ */
+(0, app_1.initializeApp)();
+const functionBuilder = functions.region('europe-west1');
+/**
+ * Storage
+ */
+coreTriggers.OSKStorageController.default.registerTriggers([{ regExp: userTriggers.profileImageRegExp, exec: userTriggers.OSKUserController.default.updateProfileImage }]);
+// /**
+//  * Secrets
+//  */
+// const sengridApiKey = defineSecret('SENDGRID_API_KEY');
+/**
+ * Triggers
+ */
+exports.core = Object.assign({}, coreTriggers.getStorageTriggers(functionBuilder));
+exports.user = Object.assign(Object.assign({}, userTriggers.getAuthTriggers(functionBuilder)), userTriggers.getFirestoreTriggers(functionBuilder));
 //# sourceMappingURL=index.js.map

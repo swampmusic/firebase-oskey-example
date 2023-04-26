@@ -1,0 +1,7 @@
+#!/bin/sh
+
+echo "Linting ./functions"
+(cd functions; npm run lint || exit 1)
+
+echo "Linting ./test"
+(cd test; npm run lint || exit 1)

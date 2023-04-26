@@ -1,6 +1,0 @@
-{
-  "projectId": "oskey-example",
-  "region": "europe-west",
-  "hubHostname": "localhost",
-  "hubPort": 18099
-}

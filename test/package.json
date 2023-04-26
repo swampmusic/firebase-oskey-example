@@ -1,37 +1,47 @@
 {
-  "name": "test",
-  "version": "1.0.1",
+  "name": "firebase-emulators-oskey-example",
+  "version": "0.2.0",
   "description": "Firebase unit testing using emulators",
-  "author": "Greg PFISTER <greg@oskey.io>",
-  "copyright": "(c) OSkey.io. All rights reserved.",
+  "author": "OSkey SAS",
+  "copyright": "Copyright (c) 2021-2023, OSkey SAS. MIT License.",
   "license": "SEE LICENSE IN LICENSE.md",
   "main": "src/test.js",
   "scripts": {
-    "lint": "eslint 'src/**/*.ts' --fix",
-    "test": "mocha --require ts-node/register src/unit_test.ts --timeout 60000 --delay --exit"
+    "lint": "eslint 'src/**/*.ts'",
+    "lint:fix": "eslint 'src/**/*.ts' --fix",
+    "test": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit",
+    "test:bail": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit --bail",
+    "test:progress": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit --reporter progress",
+    "test:ci:json": "mocha -r ts-node/register -r tsconfig-paths/register src/unit_test.ts --timeout 60000 --delay --exit --reporter json --reporter-option output=test_result.json"
   },
   "devDependencies": {
     "@types/chai": "^4.3.0",
-    "@types/mocha": "^9.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.8.1",
-    "@typescript-eslint/parser": "^5.8.1",
+    "@types/child-process-promise": "^2.2.2",
+    "@types/jsonwebtoken": "^9.0.0",
+    "@types/mocha": "^10.0.0",
+    "@types/node": "^18.11.15",
+    "@typescript-eslint/eslint-plugin": "^5.10.2",
+    "@typescript-eslint/parser": "^5.10.2",
     "chai": "^4.3.4",
+    "child-process-promise": "^2.2.1",
     "eslint": "^8.5.0",
-    "eslint-config-standard": "^16.0.3",
     "eslint-plugin-chai-friendly": "^0.7.2",
     "eslint-plugin-import": "^2.25.3",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^6.0.0",
     "firebase": "^9.6.1",
-    "firebase-admin": "^10.0.1",
-    "gp-firebase-emulator-unit-test": "^0.1.3",
-    "mocha": "^9.1.3",
+    "firebase-admin": "^11.3.0",
+    "gp-firebase-emulator-unit-test": "^1.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "mocha": "^10.0.0",
     "nyc": "^15.1.0",
+    "prettier": "^2.8.4",
     "ts-node": "^10.4.0",
-    "tsc-watch": "^4.6.0",
+    "tsc-watch": "^6.0.0",
+    "tsconfig-paths": "^4.1.2",
     "typescript": "^4.5.4"
   },
   "engines": {
-    "node": "16"
+    "node": "18"
   }
 }

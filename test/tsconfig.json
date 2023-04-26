@@ -1,17 +1,26 @@
 {
-  "compilerOptions": {
-    "target": "es2021",
-    "module": "commonjs",
-    "declaration": true,
-    "sourceMap": true,
-    "outDir": "./dist",
-    // "rootDir": "./src/**/*.ts",
-    "isolatedModules": true,
-    "strict": true,
-    "esModuleInterop": true,
-    "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
-  },
-  "include": ["./src/**/*.ts"],
-  "exclude": ["./dist/**/*"]
+    "compilerOptions": {
+        "target": "es2021",
+        "module": "commonjs",
+        "declaration": true,
+        "sourceMap": true,
+        "outDir": "./dist",
+        // "rootDir": "./src/**/*.ts",
+        // "isolatedModules": true,
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": "./",
+        "paths": {
+            "@oskey-test/data": ["src/data"],
+            "@oskey-test/helpers": ["src/helpers"],
+            "@oskey-test/models": ["src/models"],
+            "@oskey-test/specs": ["src/specs"],
+            "@oskey/core": ["../functions/src/modules/core"],
+            "@oskey/user": ["../functions/src/modules/user"]
+        }
+    },
+    "include": ["./src/**/*.ts"],
+    "exclude": ["./dist/**/*"]
 }

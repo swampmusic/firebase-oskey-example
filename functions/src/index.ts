@@ -1,46 +1,47 @@
-/**
- * firebase-oskey-example
- * @copyright (c) 2020, OSkey.io. MIT License.
- * @license SEE LICENSE IN LICENSE.md
- */
+//
+// firebase-oskey-example
+// Copyright (c) 2021-2023, OSkey SAS. MIT License.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+// SOFTWARE.
+//
 
-import * as admin from 'firebase-admin';
+import { initializeApp } from 'firebase-admin/app';
 import * as functions from 'firebase-functions';
+import { FunctionBuilder } from 'firebase-functions';
 
-import { OSKFirebaseAuthModule } from './firebase_auth';
-import { OSKFirebaseFirestoreModule } from './firebase_firestore';
+import * as coreTriggers from '@oskey/core';
+import * as userTriggers from '@oskey/user';
 
-/** *****************************************************************************
+/**
  * Initialize app
- ***************************************************************************** */
-admin.initializeApp();
+ */
+initializeApp();
+const functionBuilder: FunctionBuilder = functions.region('europe-west1');
 
-/** *****************************************************************************
- * Authentication trigger
- ***************************************************************************** */
+/**
+ * Storage
+ */
+coreTriggers.OSKStorageController.default.registerTriggers([{ regExp: userTriggers.profileImageRegExp, exec: userTriggers.OSKUserController.default.updateProfileImage }]);
 
-// On user creation
-export const onUserAccountCreated = functions
-  .region('europe-west1')
-  .auth.user()
-  .onCreate((user) => OSKFirebaseAuthModule.userAccountController.onUserAccountCreated(user));
+// /**
+//  * Secrets
+//  */
+// const sengridApiKey = defineSecret('SENDGRID_API_KEY');
 
-// On user deletion
-export const onUserAccountDeleted = functions
-  .region('europe-west1')
-  .auth.user()
-  .onDelete((user) => OSKFirebaseAuthModule.userAccountController.onUserAccountDeleted(user));
-
-/** *****************************************************************************
- * DB Trigger : User
- ***************************************************************************** */
-
-export const onUserCreated = functions
-  .region('europe-west1')
-  .firestore.document('/users/{userId}')
-  .onCreate((snapshot, context) => OSKFirebaseFirestoreModule.userController.onCreate(snapshot, context));
-
-export const onUserUpdated = functions
-  .region('europe-west1')
-  .firestore.document('/users/{userId}')
-  .onUpdate((snapshot, context) => OSKFirebaseFirestoreModule.userController.onUpdate(snapshot, context));
+/**
+ * Triggers
+ */
+export const core = {
+    ...coreTriggers.getStorageTriggers(functionBuilder),
+};
+export const user = {
+    ...userTriggers.getAuthTriggers(functionBuilder),
+    ...userTriggers.getFirestoreTriggers(functionBuilder),
+    // ...userTriggers.getCallableFunctionTriggers(functionBuilder),
+};

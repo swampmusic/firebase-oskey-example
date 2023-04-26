@@ -10,34 +10,63 @@
     ],
     "source": "./functions"
   },
+  "hosting": [
+    {
+      "target": "oskey-example",
+      "appAssociation": "AUTO",
+      "rewrites": [
+        {
+          "source": "/app/**",
+          "dynamicLinks": true
+        },
+        {
+          "source": "/auth/**",
+          "dynamicLinks": true
+        }
+      ]
+    }
+  ],
   "storage": {
     "rules": "storage/storage.rules"
   },
   "emulators": {
-    "auth": {
-      "host": "localhost",
-      "port": 19001
-    },
-    "functions": {
-      "host": "localhost",
-      "port": 19003
-    },
-    "firestore": {
-      "host": "localhost",
-      "port": 19002
-    },
-    "storage": {
-      "host": "localhost",
-      "port": 19005
-    },
     "ui": {
       "enabled": true,
-      "host": "localhost",
+      "host": "0.0.0.0",
       "port": 19000
     },
+    "auth": {
+      "host": "0.0.0.0",
+      "port": 19001
+    },
+    "firestore": {
+      "host": "0.0.0.0",
+      "port": 19002,
+      "websocketPort": 19097
+    },
+    "functions": {
+      "host": "0.0.0.0",
+      "port": 19003
+    },
+    "pubsub": {
+      "host": "0.0.0.0",
+      "port": 19004
+    },
+    "storage": {
+      "host": "0.0.0.0",
+      "port": 19005
+    },
     "hub": {
-      "host": "localhost",
-      "port": 19099
+      "host": "0.0.0.0",
+      "port": 19006
+    },
+    "eventarc": {
+      "host": "0.0.0.0",
+      "port": 18098
+    },
+    "logging": {
+      "host": "0.0.0.0",
+      "port": 18099
     }
   }
 }
