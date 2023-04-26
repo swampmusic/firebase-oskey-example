@@ -21,7 +21,7 @@ on:
 
 jobs:
   build:
-    name: Build firebase-oskey-dev
+    name: Build firebase-oskey-example
     runs-on: ubuntu-22.04
     env:
       FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
@@ -35,7 +35,7 @@ jobs:
         continue-on-error: true
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Checkout
+      - name: Node 18.x
         uses: actions/setup-node@v3
         with:
           node-version: '18.x'
@@ -48,8 +48,8 @@ jobs:
         run: (cd functions; npm ci && npm run lint)
       - name: Install Java and ImageMagick
         run: |
-          apt-get update && \
-          apt-get install -y -o DPkg::Options::=--force-confdef openjdk-19-jre-headless imagemagick
+          sudo apt-get update && \
+          sudo apt-get install -y -o DPkg::Options::=--force-confdef openjdk-19-jre-headless imagemagick
       - name: Set google credentials
         run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > ./credentials.json
         env:
