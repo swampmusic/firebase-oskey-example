@@ -56,7 +56,7 @@ jobs:
           GOOGLE_APPLICATION_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}
       - name: Set to dev project
         run: |
-          export GOOGLE_APPLICATION_CREDENTIALS=`pwd`'/credentials.json' \
+          export GOOGLE_APPLICATION_CREDENTIALS=`pwd`'/credentials.json' && \
           PATH=$PATH:./.devcontainer firebase-cli use dev && \
           unset GOOGLE_APPLICATION_CREDENTIALS
       - name: Run test
