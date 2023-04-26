@@ -14,14 +14,12 @@
 name: pull_request
 
 on:
-  push:
-    branches: ['master']
   pull_request:
     branches: ['master']
 
 jobs:
   build:
-    name: Build firebase-oskey-example
+    name: Build & test firebase-oskey-example
     runs-on: ubuntu-22.04
     env:
       FIREBASE_EMULATORS_PATH: ${{ github.workspace }}/emulator-cache
