@@ -14,8 +14,12 @@
 #
 
 # run the original firebase
-if [ $FIREBASE_TOKEN ]; then
-  npx firebase "$@" --token "$FIREBASE_TOKEN"
-else
+if [ $GOOGLE_APPLICATION_CREDENTIALS ]; then
   npx firebase "$@"
+else
+  if [ $FIREBASE_TOKEN ]; then
+    npx firebase "$@" --token "$FIREBASE_TOKEN"
+  else
+    npx firebase "$@"
+  fi
 fi
