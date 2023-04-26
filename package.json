@@ -7,7 +7,7 @@
   "copyright": "Copyright (c) 2021-2023, OSkey SAS. MIT Licence.",
   "scripts": {
     "deploy:ci:part1": "firebase-cli deploy --non-interactive -f --only firestore,hosting:$FIREBASE_PROJECT_ID,storage",
-    "deploy:ci:part3": "firebase-cli deploy --non-interactive -f --only functions:user",
+    "deploy:ci:part2": "firebase-cli deploy --non-interactive -f --only functions:user",
     "emul": "firebase-cli emulators:start --only auth,firestore,functions,pubsub,storage",
     "emul:build": "(cd functions && rm -rf dist && npm run build -- --watch | (cd ../ && npm run emul))",
     "emul:export": "firebase-cli emulators:start --only auth,firestore,functions,pubsub,storage --export-on-exit ./snapshots/",
