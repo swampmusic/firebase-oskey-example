@@ -18,7 +18,7 @@ on:
     types: [created]
 
 jobs:
-  build:
+  test:
     name: Build & test firebase-oskey-example
     runs-on: ubuntu-22.04
     env:
@@ -61,7 +61,7 @@ jobs:
         run: PATH=$PATH:./.devcontainer npm run test:ci:json
 
   deploy-firebase:
-    name: Deploy to firebase-oskey-example
+    name: Deploy firebase-oskey-example to prod
     needs: test
     runs-on: ubuntu-22.04
     env:
