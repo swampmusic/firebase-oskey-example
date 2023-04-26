@@ -45,7 +45,7 @@ jobs:
       - name: 'Functions: Install dependencies, lint and build'
         run: (cd functions; npm ci && npm run lint && npm run build)
       - name: 'Test: Install dependencies and lint'
-        run: (cd functions; npm ci && npm run lint)
+        run: (cd test; npm ci && npm run lint)
       - name: Install Java and ImageMagick
         run: |
           sudo apt-get update && \
@@ -60,5 +60,5 @@ jobs:
           PATH=$PATH:./.devcontainer firebase-cli use dev && \
           unset GOOGLE_APPLICATION_CREDENTIALS
       - name: Run test
-        run: PATH=$PATH:./.devcontainer npm test
+        run: PATH=$PATH:./.devcontainer npm run test:ci:json
 # End
