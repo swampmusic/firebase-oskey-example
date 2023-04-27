@@ -90,7 +90,7 @@ jobs:
       - name: Set google credentials
         run: echo $GOOGLE_APPLICATION_CREDENTIALS_PROD_BASE64 | base64 -d > ./credentials.json
         env:
-          GOOGLE_APPLICATION_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}
+          GOOGLE_APPLICATION_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_PROD_BASE64 }}
       - name: Set to prod project
         run: |
           export GOOGLE_APPLICATION_CREDENTIALS=`pwd`'/credentials.json' && \
