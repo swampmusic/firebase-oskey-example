@@ -13,12 +13,12 @@
 
 FROM ghcr.io/gp-devenv/gp-firebase-devenv:22.04-18-1
 
-# >>> Force node version 1/2
-# Use node version 18.15.0
-# There is a incompatibility between Node v18.16.0 and firebase-tools v11
-# Comment when this is resolved
-ARG NODE_VERSION="v18.15.0"
-# <<< Force node version 1/2
+# # >>> Force node version 1/2
+# # Use node version 18.15.0
+# # There is a incompatibility between Node v18.16.0 and firebase-tools v11
+# # Comment when this is resolved
+# ARG NODE_VERSION="v18.15.0"
+# # <<< Force node version 1/2
 
 # Switch back to root
 USER root
@@ -30,15 +30,16 @@ RUN chmod ogu+x /usr/bin/firebase-cli
 # Switch back to vscode user
 USER vscode
 
-# >>> Force node version 2/2
-# Use nvm to instel node version set above
-# There is a incompatibility between Node v18.16.0 and firebase-tools v11
-# Comment when this is resolved
-RUN export NVM_DIR="$HOME/.nvm" && \
-    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
-    nvm install $NODE_VERSION && \
-    npm i -g npm@latest
-# <<< Force node version 2/2
+# # >>> Force node version 2/2
+# # Use nvm to instel node version set above
+# # There is a incompatibility between Node v18.16.0 and firebase-tools v11
+# # Comment when this is resolved
+# RUN export NVM_DIR="$HOME/.nvm" && \
+#     [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && \
+#     nvm install $NODE_VERSION && \
+#     nvm use $NODE_VERSION && \
+#     npm i -g npm@latest
+# # <<< Force node version 2/2
 
 # Set worksapce
 WORKDIR /workspace

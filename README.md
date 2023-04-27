@@ -36,6 +36,13 @@ installation (node, npm, ...).
 
 _Note:_ For Windows users, you have to make adjustment to the dev container.
 
+Once the dev environment has started, you need to finish the configuration (to
+get a nice `vim` and `tmux` config):
+
+```sh
+~/setup.sh
+```
+
 #### Building and testing locally (not recommended)
 
 - git: Any git client should work
@@ -192,6 +199,18 @@ by you project name):
 
 _Note:_ You may also just replace in both file all iterations for
 `oskey-example` by you project name.
+
+Once the configuration is ready, you need to login to Firebase:
+
+```sh
+firebase-cli login
+```
+
+Then, you need to set to your project (for example):
+
+```sh
+firebase-cli use my-project
+```
 
 ### Build Cloud Functions
 

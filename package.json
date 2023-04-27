@@ -31,6 +31,6 @@
   },
   "homepage": "https://github.com/oskey-example/firebase-oskey-example#readme",
   "devDependencies": {
-    "firebase-tools": "^11.28.0"
+    "firebase-tools": "^11.29.1"
   }
 }
