@@ -88,7 +88,7 @@ jobs:
       - name: 'Functions: Install dependencies, lint and build'
         run: (cd functions; npm ci && npm run lint && npm run build)
       - name: Set google credentials
-        run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > ./credentials.json
+        run: echo $GOOGLE_APPLICATION_CREDENTIALS_PROD_BASE64 | base64 -d > ./credentials.json
         env:
           GOOGLE_APPLICATION_CREDENTIALS_BASE64: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}
       - name: Set to prod project
