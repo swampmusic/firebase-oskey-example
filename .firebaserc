@@ -1,15 +1,15 @@
 {
-  "projects": {
-    "dev": "oskey-example",
-    "prod": "oskey-example"
-  },
-  "targets": {
-    "oskey-example": {
-      "hosting": {
-        "oskey-example": [
-          "dynlink-oskey-example"
-        ]
-      }
+    "projects": {
+        "dev": "os-key",
+        "prod": "os-key"
+    },
+    "targets": {
+        "os-key": {
+            "hosting": {
+                "os-key": [
+                    "dynlink-os-key"
+                ]
+            }
+        }
     }
-  }
 }

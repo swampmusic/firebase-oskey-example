@@ -1,72 +1,69 @@
 {
-  "firestore": {
-    "rules": "firestore/firestore.rules",
-    "indexes": "firestore/firestore.indexes.json"
-  },
-  "functions": {
-    "predeploy": [
-      "npm --prefix \"$RESOURCE_DIR\" run lint",
-      "npm --prefix \"$RESOURCE_DIR\" run build"
-    ],
-    "source": "./functions"
-  },
-  "hosting": [
-    {
-      "target": "oskey-example",
-      "appAssociation": "AUTO",
-      "rewrites": [
-        {
-          "source": "/app/**",
-          "dynamicLinks": true
-        },
-        {
-          "source": "/auth/**",
-          "dynamicLinks": true
-        }
-      ]
-    }
-  ],
-  "storage": {
-    "rules": "storage/storage.rules"
-  },
-  "emulators": {
-    "ui": {
-      "enabled": true,
-      "host": "0.0.0.0",
-      "port": 19000
-    },
-    "auth": {
-      "host": "0.0.0.0",
-      "port": 19001
-    },
     "firestore": {
-      "host": "0.0.0.0",
-      "port": 19002,
-      "websocketPort": 19097
+        "rules": "firestore/firestore.rules",
+        "indexes": "firestore/firestore.indexes.json"
     },
     "functions": {
-      "host": "0.0.0.0",
-      "port": 19003
+        "predeploy": [
+            "npm --prefix \"$RESOURCE_DIR\" run lint",
+            "npm --prefix \"$RESOURCE_DIR\" run build"
+        ],
+        "source": "./functions"
     },
-    "pubsub": {
-      "host": "0.0.0.0",
-      "port": 19004
-    },
+    "hosting": [{
+        "target": "os-key",
+        "appAssociation": "AUTO",
+        "rewrites": [{
+                "source": "/app/**",
+                "dynamicLinks": true
+            },
+            {
+                "source": "/auth/**",
+                "dynamicLinks": true
+            }
+        ]
+    }],
     "storage": {
-      "host": "0.0.0.0",
-      "port": 19005
+        "rules": "storage/storage.rules"
     },
-    "hub": {
-      "host": "0.0.0.0",
-      "port": 19006
-    },
-    "eventarc": {
-      "host": "0.0.0.0",
-      "port": 18098
-    },
-    "logging": {
-      "host": "0.0.0.0",
-      "port": 18099
+    "emulators": {
+        "ui": {
+            "enabled": true,
+            "host": "0.0.0.0",
+            "port": 19000
+        },
+        "auth": {
+            "host": "0.0.0.0",
+            "port": 19001
+        },
+        "firestore": {
+            "host": "0.0.0.0",
+            "port": 19002,
+            "websocketPort": 19097
+        },
+        "functions": {
+            "host": "0.0.0.0",
+            "port": 19003
+        },
+        "pubsub": {
+            "host": "0.0.0.0",
+            "port": 19004
+        },
+        "storage": {
+            "host": "0.0.0.0",
+            "port": 19005
+        },
+        "hub": {
+            "host": "0.0.0.0",
+            "port": 19006
+        },
+        "eventarc": {
+            "host": "0.0.0.0",
+            "port": 18098
+        },
+        "logging": {
+            "host": "0.0.0.0",
+            "port": 18099
+        }
     }
-  }
 }
